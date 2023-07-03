@@ -1,0 +1,76 @@
+# Fichiers système
+*.pyc
+__pycache__/
+*.swp
+*.swo
+
+# Fichiers de sauvegarde
+*.bak
+*.~*
+
+# Fichiers d'environnement
+.env
+
+# Dossiers spécifiques à Django
+/static/
+/media/
+
+# Fichier de configuration local
+/local_settings.py
+
+# Fichiers de dépendances
+/.venv/
+/pip-selfcheck.json
+
+# Fichiers de journalisation
+/log/
+
+# Dossier de fichiers statiques collectés
+/staticfiles/
+
+# Fichiers de sauvegarde de la base de données
+/db.sqlite3
+
+# Dossiers de fichiers téléchargés
+/media/documents/
+/media/images/
+/media/uploads/
+
+# Fichier de base de données Postgres
+*.psql
+
+# Fichiers de cache Django
+*.cache
+
+# Fichiers générés par l'IDE
+.idea/
+.vscode/
+*.pydevproject
+
+# Fichiers de sauvegarde SFTP
+.sftp-config.json
+
+# Dossiers de résultats de test
+/.pytest_cache/
+/.pytest_output/
+
+# Fichier de configuration de l'éditeur de texte
+.editorconfig
+
+# Fichiers de sauvegarde de migration Django
+*.migration
+
+# Fichiers générés par Sphinx
+/docs/_build/
+
+# Fichiers de sauvegarde de virtualenv
+/.env/
+/ENV/
+/.python-version
+
+# Dossiers spécifiques à Docker
+/docker/
+/docker-compose.yml
+
+# Fichier de configuration de PyCharm
+/.idea/
