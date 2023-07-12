@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<header>
+    <h1>Litrevu</h1>
+</header>
+
+<table class="height-100">
+    <colgroup>
+        <col class="width-50">
+        <col class="width-50">
+    </colgroup>
+    <tr>
+        <td>
+            <h2>Inscrivez vous maintenant</h2>
+            <button>S'inscrire</button>
+        </td>
+        <td>
+            <h2>Connectez vous</h2>
+            <p>{{ message }}</p>
+            <form method="post">
+                {{ form.as_p }}
+                {% csrf_token %}
+                <button type="submit" >Se connecter</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<header>
+    <h1>Litrevu</h1>
+</header>
+
+<table class="height-100">
+    <tr>
+        <td>
+            <h2>Inscrivez-vous</h2>
+            <input 
+                type="text" 
+                name="username" 
+                value="Nom d'utilisateur"
+                class="width-50"
+            ><br>
+            <input 
+                type="password" 
+                name="password" 
+                value="Mot de passe"
+                class="width-50"
+            ><br>
+            <input 
+                type="password" 
+                name="confirm-password" 
+                value="Mot de passe"
+                class="width-50"
+            ><br>
+            <button>Retourner</button>
+            <button>S'inscrire</button>
+        </td>
+    </tr>
+</table>
+
+{% endblock %}
