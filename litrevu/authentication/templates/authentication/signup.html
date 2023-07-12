@@ -10,26 +10,13 @@
     <tr>
         <td>
             <h2>Inscrivez-vous</h2>
-            <input 
-                type="text" 
-                name="username" 
-                value="Nom d'utilisateur"
-                class="width-50"
-            ><br>
-            <input 
-                type="password" 
-                name="password" 
-                value="Mot de passe"
-                class="width-50"
-            ><br>
-            <input 
-                type="password" 
-                name="confirm-password" 
-                value="Mot de passe"
-                class="width-50"
-            ><br>
-            <button>Retourner</button>
-            <button>S'inscrire</button>
+            <p>{{ message }}</p>
+            <form method="post">
+                {{ form.as_p }}
+                {% csrf_token %}
+                <button type="submit" >S'inscrire</button>
+            </form>
+            <a href="{% url 'login' %}"><button>Retourner</button></a>
         </td>
     </tr>
 </table>

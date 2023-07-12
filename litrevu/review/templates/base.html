@@ -7,9 +7,15 @@
         <link rel="stylesheet" href="{% static 'styles.css' %}" />
     </head>
     <body>
+        <header>
+            <h1>Litrevu</h1>
+            <subheader>
+                <a href="{% url 'home' %}">Flux</a>
+                <a href="{% url 'posts' %}">Posts</a>
+                <a href="{% url 'followings' %}">Abonnements</a>
+                <a href="{% url 'logout' %}">Se déconnecter</a>
+            </subheader>
+        </header>
         {% block content %}{% endblock %}
-        {%  if user.is_authenticated %}
-            <p>Vous êtes connecté en tant que {{ request.user }}. <a href="{% url 'login' %}">Se déconnecter</a></p>
-        {% endif %}
     </body>
 </html>
