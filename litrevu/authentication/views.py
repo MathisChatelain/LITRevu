@@ -6,7 +6,7 @@ from django.contrib.auth import (
     authenticate,
     logout,
 )
-from django.contrib.auth.models import User
+from authentication.models import User
 
 
 def login_page(request):

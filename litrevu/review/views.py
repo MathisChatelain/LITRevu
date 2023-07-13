@@ -1,12 +1,25 @@
-from django.shortcuts import render
+from itertools import chain
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import CreateTicketForm, CreateReviewForm
+from django.db.models import Value, CharField
 from .models import Ticket, Review
+from .utils import get_users_viewable_reviews, get_users_viewable_tickets
 
 
 @login_required
 def home(request):
-    return render(request, "review/home.html")
+    reviews = get_users_viewable_reviews(request.user)
+    # returns queryset of reviews
+    reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
+    tickets = get_users_viewable_tickets(request.user)
+    # returns queryset of tickets
+    tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
+    # combine and sort the two types of posts
+    posts = sorted(
+        chain(reviews, tickets), key=lambda post: post.time_created, reverse=True
+    )
+    return render(request, "review/home.html", context={"posts": posts})
 
 
 @login_required
@@ -39,6 +52,7 @@ def create_ticket(request):
                 user=request.user,
             )
             ticket.save()
+            return redirect("home")
     return render(
         request,
         "review/create-ticket.html",
@@ -71,6 +85,7 @@ def create_review(request):
                 ticket=ticket,
             )
             review.save()
+            return redirect("home")
     return render(
         request,
         "review/create-review.html",

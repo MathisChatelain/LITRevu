@@ -1,0 +1,14 @@
+
+
+{% if ticket.user == user %}
+    <p>Vous avez demandé une critique</p>
+{% else %}
+    <p>{{ ticket.user }} à demandé une critique</p>
+{% endif %}
+<p>{{ ticket.created_at }}</p>
+<p>{{ ticket.title }}</p>
+<p>{{ ticket.description }}</p>
+{% if ticket.image %}
+    <img src="{{ ticket.image.url }}" alt="">
+{% endif %}
+<a href="{% url 'create-review' ticket.id %}"><button>Creer une critique</button></a>
