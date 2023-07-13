@@ -8,9 +8,9 @@
 
     {% for post in posts %}
         {% if post.content_type == 'TICKET' %}
-            {% include 'ticket_snippet.html' %}
+            {% include 'review/ticket_snippet.html' %}
         {% elif post.content_type == 'REVIEW' %}
-            {% include 'review_snippet.html' %}
+            {% include 'review/review_snippet.html' %}
         {% endif %}
     {% endfor %}
 </main>

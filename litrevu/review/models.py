@@ -15,7 +15,7 @@ class Ticket(models.Model):
     description = models.CharField(max_length=500, default="")
     image = models.ImageField(upload_to="images", blank=True)
     has_response = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    time_created = models.DateTimeField(auto_now_add=True)
 
 
 class Review(models.Model):

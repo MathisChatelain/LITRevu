@@ -4,15 +4,17 @@ from django.contrib.auth.decorators import login_required
 from .forms import CreateTicketForm, CreateReviewForm
 from django.db.models import Value, CharField
 from .models import Ticket, Review
-from .utils import get_users_viewable_reviews, get_users_viewable_tickets
+from .utils import get_users_viewable_for_model, get_current_user
+from datetime import datetime
+from authentication.models import User
 
 
 @login_required
 def home(request):
-    reviews = get_users_viewable_reviews(request.user)
+    reviews = get_users_viewable_for_model(request.user, Review)
     # returns queryset of reviews
     reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
-    tickets = get_users_viewable_tickets(request.user)
+    tickets = get_users_viewable_for_model(request.user, Ticket)
     # returns queryset of tickets
     tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
     # combine and sort the two types of posts
@@ -49,7 +51,8 @@ def create_ticket(request):
                 title=create_ticket_form.cleaned_data["title"],
                 description=create_ticket_form.cleaned_data["description"],
                 image=create_ticket_form.cleaned_data["image"],
-                user=request.user,
+                user=get_current_user(request.user),
+                time_created=datetime.now(),
             )
             ticket.save()
             return redirect("home")
@@ -62,27 +65,39 @@ def create_ticket(request):
 
 @login_required
 def create_review(request):
-    create_ticket_form = CreateTicketForm()
+    """Allows a user to create a review with or without a ticket"""
     create_review_form = CreateReviewForm()
+    ticket_id = request.GET.get("ticket_id", None)
+    ticket: Ticket = Ticket.objects.get(id=ticket_id) if ticket_id else None
+    create_ticket_form = (
+        CreateTicketForm(instance=ticket) if ticket else CreateTicketForm()
+    )
     message = ""
     if request.method == "POST":
-        create_ticket_form = CreateTicketForm(request.POST)
+        if not ticket:
+            create_ticket_form = CreateTicketForm(request.POST)
         create_review_form = CreateReviewForm(request.POST)
+        user = get_current_user(request.user)
         if create_review_form.is_valid() and create_ticket_form.is_valid():
-            # We create the ticket
-            ticket: Ticket = Ticket.objects.create(
-                title=create_ticket_form.cleaned_data["title"],
-                description=create_ticket_form.cleaned_data["description"],
-                image=create_ticket_form.cleaned_data["image"],
-            )
+            # We create the ticket in case it does not exist
+            if not ticket:
+                ticket: Ticket = Ticket.objects.create(
+                    title=create_ticket_form.cleaned_data["title"],
+                    description=create_ticket_form.cleaned_data["description"],
+                    image=create_ticket_form.cleaned_data["image"],
+                    user=user,
+                    time_created=datetime.now(),
+                )
+            ticket.has_response = True
             ticket.save()
             # We create the review
             review: Review = Review.objects.create(
                 headline=create_review_form.cleaned_data["headline"],
                 rating=create_review_form.cleaned_data["rating"],
                 body=create_review_form.cleaned_data["body"],
-                user=request.user,
+                user=user,
                 ticket=ticket,
+                time_created=datetime.now(),
             )
             review.save()
             return redirect("home")

@@ -2,22 +2,21 @@ from authentication.models import User
 from .models import Ticket, Review
 
 
-def get_users_viewable_reviews(request_user: User):
+def unlazy_user(request_user):
+    """Get the user object from the request"""
+    return request_user._wrapped if hasattr(request_user, "_wrapped") else request_user
+
+
+def get_current_user(request_user: User):
+    """Get the user object from the request"""
+    return User.objects.get(username=unlazy_user(request_user))
+
+
+def get_users_viewable_for_model(request_user: User, model: Ticket | Review):
     """Get all reviews from users that the current user follows"""
-    user = request_user._wrapped if hasattr(request_user, "_wrapped") else request_user
-    print(user.__dict__)
+    user = unlazy_user(request_user)
     return (
-        Review.objects.filter(user__in=user.user_follows.all())
+        model.objects.filter(user__in=user.user_follows.all())
         if hasattr(user, "user_follows")
-        else Review.objects.none()
-    ) | Review.objects.filter(user=user)
-
-
-def get_users_viewable_tickets(request_user: User):
-    """Get all tickets from users that the current user follows"""
-    user = request_user._wrapped if hasattr(request_user, "_wrapped") else request_user
-    return (
-        Ticket.objects.filter(user__in=user.user_follows.all())
-        if hasattr(user, "user_follows")
-        else Ticket.objects.none()
-    ) | Ticket.objects.filter(user=user)
+        else model.objects.none()
+    ) | model.objects.filter(user=user)
