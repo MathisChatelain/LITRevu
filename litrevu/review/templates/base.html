@@ -9,13 +9,13 @@
     <body>
         <header>
             <h1>Litrevu</h1>
-            <subheader>
-                <a href="{% url 'home' %}">Flux</a>
-                <a href="{% url 'posts' %}">Posts</a>
-                <a href="{% url 'followings' %}">Abonnements</a>
-                <a href="{% url 'logout' %}">Se déconnecter</a>
-            </subheader>
         </header>
+        <nav class="page-navigation">
+            <a href="{% url 'home' %}">Flux</a>
+            <a href="{% url 'posts' %}">Posts</a>
+            <a href="{% url 'following' %}">Abonnements</a>
+            <a href="{% url 'logout' %}">Se déconnecter</a>
+        </nav>
         {% block content %}{% endblock %}
     </body>
 </html>

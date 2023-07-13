@@ -5,8 +5,15 @@ from django.contrib.auth.models import User
 
 
 class Ticket(models.Model):
-    # Your Ticket model definition goes here
-    pass
+    user = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="tickets",
+        null=True,
+    )
+    title = models.CharField(max_length=128, default="")
+    description = models.CharField(max_length=500, default="")
+    image = models.ImageField(upload_to="images", blank=True)
 
 
 class Review(models.Model):

@@ -3,8 +3,8 @@
 {% block content %}
 
 <main>
-    <a><button>Demander une critique</button></a>
-    <a><button>Creer une critique</button></a>
+    <a href="{% url 'create-ticket' %}"><button>Demander une critique</button></a>
+    <a href="{% url 'create-review' %}"><button>Creer une critique</button></a>
 </main>
 
 {% endblock %}
