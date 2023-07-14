@@ -3,16 +3,19 @@
 {% block content %}
 
 <main>
-    <a href="{% url 'create-ticket' %}"><button>Demander une critique</button></a>
-    <a href="{% url 'create-review' %}"><button>Creer une critique</button></a>
-
-    {% for post in posts %}
-        {% if post.content_type == 'TICKET' %}
-            {% include 'review/ticket_snippet.html' %}
-        {% elif post.content_type == 'REVIEW' %}
-            {% include 'review/review_snippet.html' %}
-        {% endif %}
-    {% endfor %}
+    <div class="center-content">
+        <div class="home-button-container">
+            <a href="{% url 'create-ticket' %}"><button>Demander une critique</button></a>
+            <a href="{% url 'create-review' %}"><button>Creer une critique</button></a>
+        </div>
+        {% for post in posts %}
+            {% if post.content_type == 'TICKET' %}
+                {% include 'review/ticket_snippet.html' %}
+            {% elif post.content_type == 'REVIEW' %}
+                {% include 'review/review_snippet.html' %}
+            {% endif %}
+        {% endfor %}
+    </div>
 </main>
 
 {% endblock %}

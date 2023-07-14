@@ -3,18 +3,29 @@
 {% block content %}
 
 <main>
-    <h2>Créer une critique</h2>
-    <h3>Livre / Article</h3>
-    <form method="post">
-        {{ create_ticket_form.as_p }}
-        {% csrf_token %}
-    </form>
-    <h3>Critique</h3>
-    <form method="post">
-        {{ create_review_form.as_p }}
-        {% csrf_token %}
-        <button type="submit" >Envoyer</button>
-    </form>
+    <div class="center-content">
+        <h2>Créer une critique</h2>
+        {% if ticket %}
+            <div class="separated-forms">
+                <p>Vous êtes en train de poster en réponse à </p>
+                {% with ticket as post %}
+                    {% include 'review/ticket_snippet.html' %}
+                {% endwith %}
+            </div>
+        {% else %}
+            <form method="post" class="separated-forms">
+                <h3>Livre / Article</h3>
+                {{ create_ticket_form.as_p }}
+                {% csrf_token %}
+            </form>
+        {% endif %}
+        <form method="post" class="separated-forms">
+            <h3>Critique</h3>
+            {{ create_review_form.as_p }}
+            {% csrf_token %}
+            <button type="submit" >Envoyer</button>
+        </form>
+    </div>
 </main>
 
 {% endblock %}

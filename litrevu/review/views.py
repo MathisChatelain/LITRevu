@@ -78,7 +78,7 @@ def create_review(request):
             create_ticket_form = CreateTicketForm(request.POST)
         create_review_form = CreateReviewForm(request.POST)
         user = get_current_user(request.user)
-        if create_review_form.is_valid() and create_ticket_form.is_valid():
+        if create_review_form.is_valid() and (create_ticket_form.is_valid() or ticket):
             # We create the ticket in case it does not exist
             if not ticket:
                 ticket: Ticket = Ticket.objects.create(
@@ -107,6 +107,7 @@ def create_review(request):
         context={
             "create_review_form": create_review_form,
             "create_ticket_form": create_ticket_form,
+            "ticket": ticket,
             "message": message,
         },
     )

@@ -1,12 +1,17 @@
-{% if post.user == user %}
-    <p>Vous avez demandé une critique</p>
-{% else %}
-    <p>{{ post.user }} à demandé une critique</p>
-{% endif %}
-<p>{{ post.created_at }}</p>
-<p>{{ post.title }}</p>
-<p>{{ post.description }}</p>
-{% if post.image %}
-    <img src="{{ post.image.url }}" alt="">
-{% endif %}
-<a href="{% url 'create-review'%}?ticket_id={{post.id}}"><button>Creer une critique</button></a>
+<div class="ticket-snippet">
+    {% if post.user == user %}
+        <span><p>Vous avez demandé une critique</p><p>{{ post.time_created }}</p></span>
+    {% else %}
+        <span><p>{{ post.user }} à demandé une critique</p><p>{{ post.time_created }}</p></span>
+    {% endif %}
+    <p>{{ post.title }}</p>
+    <p>{{ post.description }}</p>
+    {% if post.image %}
+        <img src="{{ post.image.url }}" alt="">
+    {% endif %}
+
+    {% if post.has_response %}
+    {% else %}
+        <a href="{% url 'create-review'%}?ticket_id={{post.id}}"><button>Creer une critique</button></a>
+    {% endif %}
+</div>

@@ -5,9 +5,19 @@ from authentication.models import User
 class LoginForm(forms.Form):
     """Form to log in a user"""
 
-    username = forms.CharField(max_length=63, label="Nom d'utilisateur")
+    username = forms.CharField(
+        max_length=63,
+        widget=forms.TextInput(
+            attrs={"class": "form-control-auth", "placeholder": "Nom d'utilisateur"}
+        ),
+        label="",
+    )
     password = forms.CharField(
-        max_length=63, widget=forms.PasswordInput, label="Mot de passe"
+        max_length=63,
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control-auth", "placeholder": "Mot de passe"}
+        ),
+        label="",
     )
 
 
@@ -15,7 +25,14 @@ class SignupForm(LoginForm):
     """Form to create a new user or login an existing one"""
 
     password_confirmation = forms.CharField(
-        max_length=63, widget=forms.PasswordInput, label="Confirmation du mot de passe"
+        max_length=63,
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control-auth",
+                "placeholder": "Confirmer mot de passe",
+            }
+        ),
+        label="",
     )
 
     def is_valid(self) -> bool:

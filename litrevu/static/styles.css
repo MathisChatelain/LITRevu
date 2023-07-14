@@ -85,4 +85,85 @@ td {
   justify-content: space-between;
 }
 
+.form-control {
+  width: 100%;
+  margin-top: 15px;
+  display: flex;
+}
+
+.unseparated-forms {
+  padding: 0px 20px;
+  width: 80%;
+}
+
+.separated-forms {
+  padding: 0px 20px;
+  width: 80%;
+  border: 1px solid black;
+}
+
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.radio-select-control > div{
+  width: 50px;
+}
+
+.radio-select-control > div > label{
+  float: left;
+  text-align: center;
+}
+
+.radio-select-control > div > label > input{
+  margin: 0px;
+}
+
+.home-button-container {
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60%;
+}
+
+.home-button-container > a {
+  margin: 0px 50px;
+}
+
+.home-button-container > a >button {
+  width: 100%;
+}
+
+.form-control-auth {
+  width: 50%;
+  text-align: center;
+}
+
+.ticket-snippet {
+  width: 70%;
+  border: 1px solid black;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.ticket-snippet > a {
+  position: relative;
+  left: calc(80% - 20px);
+}
+
+.ticket-snippet > span {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.ticket-snippet > a > button {
+  width: 20%;
+  margin-bottom: 10px;
+}
+
 /* IDs */
