@@ -26,7 +26,15 @@ def home(request):
 
 @login_required
 def posts(request):
-    return render(request, "review/posts.html")
+    user = get_current_user(request.user)
+    reviews = Review.objects.filter(user=user)
+    reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
+    tickets = Ticket.objects.filter(user=user)
+    tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
+    posts = sorted(
+        chain(reviews, tickets), key=lambda post: post.time_created, reverse=True
+    )
+    return render(request, "review/posts.html", context={"posts": posts})
 
 
 @login_required

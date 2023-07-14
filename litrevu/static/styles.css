@@ -166,4 +166,16 @@ td {
   margin-bottom: 10px;
 }
 
+.posts-edition-menu {
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  padding-top: 10px;
+  border-top: 1px solid black;
+}
+
+.posts-edition-menu > a {
+  margin: 0px 10px;
+}
+
 /* IDs */

@@ -3,7 +3,20 @@
 {% block content %}
 
 <main>
-    <div class="center-content"></div>
+    <div class="center-content">
+        <h2>Vos posts</h2>
+        {% for post in posts %}
+            {% if post.content_type == 'TICKET' %}
+                {% with allow_edition=True %}
+                    {% include 'review/ticket_snippet.html' %}
+                {% endwith %}
+            {% elif post.content_type == 'REVIEW' %}
+                {% with allow_edition=True %}
+                    {% include 'review/review_snippet.html' %}
+                {% endwith %}
+            {% endif %}
+        {% endfor %}
+    </div>
 </main>
 
 {% endblock %}
