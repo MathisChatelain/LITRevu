@@ -18,8 +18,8 @@
 
     {% if allow_edition %}
         <div class="posts-edition-menu">
-            <a href=""><button>Modifier</button></a>
-            <a href=""><button>Supprimer</button></a>
+            <a href="{% url 'create-review' %}?review_id={{post.id}}"><button>Modifier</button></a>
+            <a href="{% url 'remove-review' %}?review_id={{post.id}}"><button>Supprimer</button></a>
         </div>
     {% endif %}
 
