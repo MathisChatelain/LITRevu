@@ -14,6 +14,8 @@
             {% elif post.content_type == 'REVIEW' %}
                 {% include 'review/review_snippet.html' %}
             {% endif %}
+        {% empty %}
+            <p>Ni vous ni aucune personne que vous suivez n'a encore posté de critique ou de ticket</p>
         {% endfor %}
     </div>
 </main>

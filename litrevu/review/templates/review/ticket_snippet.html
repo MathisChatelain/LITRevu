@@ -1,4 +1,4 @@
-<div class="ticket-snippet">
+<div class="post-snippet">
     {% if post.user.username == user.username %}
         <span><p>Vous avez demandé une critique</p><p>{{ post.time_created }}</p></span>
     {% else %}
@@ -20,8 +20,8 @@
 
     {% if allow_edition %}
         <div class="posts-edition-menu">
-            <a href=""><button>Modifier</button></a>
-            <a href=""><button>Supprimer</button></a>
+            <a href="{% url 'create-ticket' %}?ticket_id={{post.id}}"><button>Modifier</button></a>
+            <a href="{% url 'remove-ticket' %}?ticket_id={{post.id}}"><button>Supprimer</button></a>
         </div>
     {% endif %}
 </div>

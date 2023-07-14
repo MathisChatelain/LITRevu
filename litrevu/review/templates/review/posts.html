@@ -15,6 +15,8 @@
                     {% include 'review/review_snippet.html' %}
                 {% endwith %}
             {% endif %}
+        {% empty %}
+            <p>Vous n'avez encore rien posté</p>
         {% endfor %}
     </div>
 </main>

@@ -31,3 +31,6 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.headline}"
+
+    def rating_as_stars(self):
+        return "⭐" * self.rating

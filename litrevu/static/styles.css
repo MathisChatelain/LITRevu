@@ -65,6 +65,11 @@ td {
   text-align: center;
 }
 
+img {
+  width: 50%;
+  margin-bottom: 20px;
+}
+
 /* Classes */
 
 .height-100 {
@@ -143,25 +148,29 @@ td {
   text-align: center;
 }
 
-.ticket-snippet {
+.post-snippet {
   width: 70%;
   border: 1px solid black;
   padding: 10px;
   margin-bottom: 10px;
 }
 
-.ticket-snippet > a {
+.post-snippet > .post-snippet {
+  width: calc(100% - 20px);
+}
+
+.post-snippet > a {
   position: relative;
   left: calc(80% - 20px);
 }
 
-.ticket-snippet > span {
+.post-snippet > span {
   width: 100%;
   display: flex;
   justify-content: space-between;
 }
 
-.ticket-snippet > a > button {
+.post-snippet > a > button {
   width: 20%;
   margin-bottom: 10px;
 }
@@ -170,12 +179,52 @@ td {
   width: 100%;
   display: flex;
   justify-content: right;
-  padding-top: 10px;
+  padding: 10px 0px;
   border-top: 1px solid black;
 }
 
 .posts-edition-menu > a {
   margin: 0px 10px;
+}
+
+.follow-user-form {
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.follow-user-form > p {
+  width: 50%;
+  margin: 0px 20px;
+}
+
+.follow-user-form > button {
+  margin: 0px 20px;
+}
+
+.follow-user-control {
+  width: 100%;
+  margin: 0px;
+}
+
+.base-table {
+  width: 80%;
+  border: 1px solid black;
+}
+
+.base-table > tbody > tr > td > a > button {
+  padding: 0px;
+  width: 100%;
+}
+
+.base-table > tbody > tr > td {
+  padding: 10px;
+  text-align: left;
+}
+
+.remove-padding {
+  padding: 0px;
 }
 
 /* IDs */

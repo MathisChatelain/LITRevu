@@ -6,9 +6,15 @@
     <div class="center-content">
         <h2>Créer un ticket</h2>
         <p>{{ message }}</p>
-        <form method="post" class="unseparated-forms">
+        <form method="post" enctype="multipart/form-data" class="unseparated-forms">
             {{ form.as_p }}
             {% csrf_token %}
+            <div>
+                {% if ticket %}
+                    <p>Ancienne image :</p>
+                    <img src="{{ticket.image.url}}" alt="">
+                {% endif %}
+            </div>
             <button type="submit" >Envoyer</button>
         </form>
     </div>

@@ -15,9 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from authentication.views import login_page, signup, logout_user
-from review.views import home, posts, following, create_review, create_ticket
+from review.views import (
+    home,
+    posts,
+    following,
+    unfollow_user,
+    remove_ticket,
+    create_review,
+    create_ticket,
+)
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # auth
@@ -31,4 +41,6 @@ urlpatterns = [
     path("following/", following, name="following"),
     path("create-review/", create_review, name="create-review"),
     path("create-ticket/", create_ticket, name="create-ticket"),
-]
+    path("unfollow-user/", unfollow_user, name="unfollow-user"),
+    path("remove-ticket/", remove_ticket, name="remove-ticket"),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

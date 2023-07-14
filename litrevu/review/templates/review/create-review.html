@@ -13,7 +13,7 @@
                 {% endwith %}
             </div>
         {% else %}
-            <form method="post" class="separated-forms">
+            <form method="post" enctype="multipart/form-data" class="separated-forms">
                 <h3>Livre / Article</h3>
                 {{ create_ticket_form.as_p }}
                 {% csrf_token %}

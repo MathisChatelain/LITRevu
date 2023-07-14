@@ -6,6 +6,7 @@ from django.db.models import Value, CharField
 from .models import Ticket, Review
 from .utils import get_users_viewable_for_model, get_current_user
 from datetime import datetime
+from authentication.forms import FollowUserForm
 from authentication.models import User
 
 
@@ -39,7 +40,37 @@ def posts(request):
 
 @login_required
 def following(request):
-    return render(request, "review/following.html")
+    user = get_current_user(request.user)
+    users_followed = user.user_follows.exclude(username=user.username).all()
+    followers = User.objects.filter(user_follows__in=[user]).exclude(
+        username=user.username
+    )
+    follow_user_form = FollowUserForm()
+    message = ""
+    if request.method == "POST":
+        follow_user_form = FollowUserForm(request.POST)
+
+        if follow_user_form.is_valid():
+            user_to_follow = User.objects.filter(
+                username=follow_user_form.cleaned_data["username"]
+            )
+            if len(user_to_follow) > 0:
+                message = "Cet utilisateur n'existe pas."
+                user.user_follows.add(user_to_follow[0])
+                user.save()
+                message = f"Vous suivez maintenant {user_to_follow[0].username}."
+            # reset users_followed
+            users_followed = user.user_follows.exclude(username=user.username).all()
+    return render(
+        request,
+        "review/following.html",
+        context={
+            "follow_user_form": follow_user_form,
+            "message": message,
+            "users_followed": users_followed,
+            "followers": followers,
+        },
+    )
 
 
 @login_required
@@ -49,10 +80,18 @@ def create_review(request):
 
 @login_required
 def create_ticket(request):
+    """Allows a user to create or update a ticket"""
     create_ticket_form = CreateTicketForm()
+    if request.GET.get("ticket_id"):
+        existing_ticket = Ticket.objects.get(id=request.GET.get("ticket_id"))
+        create_ticket_form = CreateTicketForm(instance=existing_ticket)
     message = ""
     if request.method == "POST":
-        create_ticket_form = CreateTicketForm(request.POST)
+        create_ticket_form = (
+            CreateTicketForm(request.POST, request.FILES)
+            if not create_ticket_form
+            else create_ticket_form
+        )
         if create_ticket_form.is_valid():
             # We create the ticket
             ticket: Ticket = Ticket.objects.create(
@@ -67,8 +106,32 @@ def create_ticket(request):
     return render(
         request,
         "review/create-ticket.html",
-        context={"form": create_ticket_form, "message": message},
+        context={
+            "form": create_ticket_form,
+            "message": message,
+            "ticket": existing_ticket if request.GET.get("ticket_id") else None,
+        },
     )
+
+
+@login_required
+def unfollow_user(request):
+    user = get_current_user(request.user)
+    user_to_unfollow = User.objects.filter(id=request.GET.get("user_id"))
+    if request.method == "GET":
+        user.user_follows.remove(user_to_unfollow[0])
+        user.save()
+    return redirect("following")
+
+
+@login_required
+def remove_ticket(request):
+    user = get_current_user(request.user)
+    ticket_to_remove = Ticket.objects.filter(id=request.GET.get("ticket_id"))
+    if request.method == "GET":
+        if ticket_to_remove[0].user == user:
+            ticket_to_remove.delete()
+    return redirect("posts")
 
 
 @login_required
@@ -83,7 +146,7 @@ def create_review(request):
     message = ""
     if request.method == "POST":
         if not ticket:
-            create_ticket_form = CreateTicketForm(request.POST)
+            create_ticket_form = CreateTicketForm(request.POST, request.FILES)
         create_review_form = CreateReviewForm(request.POST)
         user = get_current_user(request.user)
         if create_review_form.is_valid() and (create_ticket_form.is_valid() or ticket):

@@ -3,7 +3,48 @@
 {% block content %}
 
 <main>
-    <div class="center-content"></div>
+    <div class="center-content">
+        <h3>Suivre d'autres utilisateurs</h3>
+        <form method="post" class="follow-user-form">
+            {{ follow_user_form.as_p }}
+            {% csrf_token %}
+            <button type="submit" >Envoyer</button>
+        </form>
+        {{ message }}
+        <h3>Abonnements</h3>
+        <table class="base-table">
+            <colgroup>
+                <col style="width: 80%;">
+                <col style="width: 20%;">
+            </colgroup>
+            <tbody>
+                {% for user_followed in users_followed %}
+                    <tr>
+                        <td>{{ user_followed.username }}</td>
+                        <td><a href="{% url 'unfollow-user'%}?user_id={{user_followed.id}}"><button>Se désabonner</button></a></td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2">Vous ne suivez personne</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h3>Abonnés</h3>
+        <table class="base-table">
+            <tbody>
+                {% for follower in followers %}
+                    <tr>
+                        <td>{{ follower.username }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td>Vous n'avez pas d'abonnés</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </main>
 
 {% endblock %}

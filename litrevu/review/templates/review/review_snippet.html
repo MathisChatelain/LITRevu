@@ -1,0 +1,33 @@
+<div class="post-snippet">
+    {% if post.user.username == user.username %}
+        <span><p>Vous avez publié une critique</p><p>{{ post.time_created }}</p></span>
+    {% else %}
+        <span><p>{{ post.user }} à publié une critique</p><p>{{ post.time_created }}</p></span>
+    {% endif %}
+
+    <p>
+        {{ post.headline }}
+        {{ post.rating_as_stars }}
+    </p>
+
+    <p>{{ post.body }}</p>
+
+    {% if post.image %}
+        <img src="{{ post.image.url }}" alt="">
+    {% endif %}
+
+    {% if allow_edition %}
+        <div class="posts-edition-menu">
+            <a href=""><button>Modifier</button></a>
+            <a href=""><button>Supprimer</button></a>
+        </div>
+    {% endif %}
+
+    {% if post.ticket %}
+        {% with post.ticket as post %}
+            {% with allow_edition=False %}
+                {% include 'review/ticket_snippet.html' %}
+            {% endwith %}
+        {% endwith %}
+    {% endif %}
+</div>

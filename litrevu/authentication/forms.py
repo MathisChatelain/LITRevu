@@ -48,3 +48,25 @@ class SignupForm(LoginForm):
             self.add_error("username", "Un utilisateur avec ce nom existe déjà.")
             is_valid = False
         return is_valid
+
+
+class FollowUserForm(forms.Form):
+    """Form to follow a user"""
+
+    username = forms.CharField(
+        max_length=63,
+        widget=forms.TextInput(
+            attrs={"class": "follow-user-control", "placeholder": "Nom d'utilisateur"}
+        ),
+        label="",
+    )
+
+    def is_valid(self) -> bool:
+        # we dont use early returns here because we want to display all errors
+        is_valid = super().is_valid()
+        if User.objects.filter(username=self.cleaned_data["username"]).exists():
+            is_valid = True
+        else:
+            self.add_error("username", "Il n'existe pas d'utilisateur avec ce nom.")
+            is_valid = False
+        return is_valid
