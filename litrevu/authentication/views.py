@@ -1,12 +1,9 @@
-from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import redirect, render
+
+from authentication.models import User
 
 from . import forms
-from django.contrib.auth import (
-    login,
-    authenticate,
-    logout,
-)
-from authentication.models import User
 
 
 def login_page(request):

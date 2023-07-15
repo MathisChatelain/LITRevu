@@ -1,27 +1,43 @@
-from itertools import chain
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .forms import CreateTicketForm, CreateReviewForm
-from django.db.models import Value, CharField
-from .models import Ticket, Review
-from .utils import get_users_viewable_for_model, get_current_user
 from datetime import datetime
+from itertools import chain
+
+from django.contrib.auth.decorators import login_required
+from django.db.models import CharField, Value
+from django.shortcuts import redirect, render
+
 from authentication.forms import FollowUserForm
 from authentication.models import User
+
+from .forms import CreateReviewForm, CreateTicketForm
+from .models import Review, Ticket
+from .utils import get_current_user, get_users_viewable_for_model
 
 
 @login_required
 def home(request):
     """Home page : chains reviews and tickets and sorts them by date"""
+    user = get_current_user(request.user)
     reviews = get_users_viewable_for_model(request.user, Review)
-    # returns queryset of reviews
     reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
+
+    # get reviews from tickets of the current user
+    # (even if the current user does not follow them)
+    # we filter out reviews where the current user is the author to avoid duplicates
+    reviews_from_user_tickets = Review.objects.filter(
+        ticket__in=Ticket.objects.filter(user=request.user)
+    ).exclude(user=user)
+    reviews_from_user_tickets = reviews_from_user_tickets.annotate(
+        content_type=Value("REVIEW", CharField())
+    )
+
     tickets = get_users_viewable_for_model(request.user, Ticket)
-    # returns queryset of tickets
     tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
+
     # combine and sort the two types of posts
     posts = sorted(
-        chain(reviews, tickets), key=lambda post: post.time_created, reverse=True
+        chain(reviews, tickets, reviews_from_user_tickets),
+        key=lambda post: post.time_created,
+        reverse=True,
     )
     return render(request, "review/home.html", context={"posts": posts})
 

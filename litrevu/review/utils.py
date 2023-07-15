@@ -1,5 +1,6 @@
 from authentication.models import User
-from .models import Ticket, Review
+
+from .models import Review, Ticket
 
 
 def unlazy_user(request_user):

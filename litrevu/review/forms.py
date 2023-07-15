@@ -1,11 +1,9 @@
 from django import forms
-from authentication.models import User
-from .models import Ticket, Review
+
+from .models import Review, Ticket
 
 
 class CreateTicketForm(forms.ModelForm):
-    """Form to create a ticket"""
-
     class Meta:
         model = Ticket
         fields = ["title", "description", "image"]
