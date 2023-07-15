@@ -21,8 +21,10 @@ from review.views import (
     following,
     unfollow_user,
     remove_ticket,
+    update_ticket,
     create_review,
     remove_review,
+    update_review,
     create_ticket,
 )
 from django.contrib import admin
@@ -44,5 +46,7 @@ urlpatterns = [
     path("create-ticket/", create_ticket, name="create-ticket"),
     path("unfollow-user/", unfollow_user, name="unfollow-user"),
     path("remove-ticket/", remove_ticket, name="remove-ticket"),
+    path("update-ticket/", update_ticket, name="update-ticket"),
     path("remove-review/", remove_review, name="remove-review"),
+    path("update-review/", update_review, name="update-review"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

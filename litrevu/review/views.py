@@ -12,6 +12,7 @@ from authentication.models import User
 
 @login_required
 def home(request):
+    """Home page : chains reviews and tickets and sorts them by date"""
     reviews = get_users_viewable_for_model(request.user, Review)
     # returns queryset of reviews
     reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
@@ -32,6 +33,9 @@ def posts(request):
     reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
     tickets = Ticket.objects.filter(user=user)
     tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
+    if user.is_superuser:
+        reviews = Review.objects.all()
+        tickets = Ticket.objects.all()
     posts = sorted(
         chain(reviews, tickets), key=lambda post: post.time_created, reverse=True
     )
@@ -74,20 +78,44 @@ def following(request):
 
 
 @login_required
+def update_ticket(request):
+    """Updates a ticket"""
+    ticket_to_update = Ticket.objects.filter(id=request.GET.get("ticket_id")).first()
+    form = CreateTicketForm(instance=ticket_to_update)
+    if request.method == "POST":
+        form = CreateTicketForm(request.POST, request.FILES, instance=ticket_to_update)
+        if form.is_valid():
+            form.save()
+            return redirect("posts")
+    return render(request, "review/create-ticket.html", {"form": form})
+
+
+@login_required
+def update_review(request):
+    """Updates a review"""
+    review_to_update = Review.objects.filter(id=request.GET.get("review_id")).first()
+    review_form = CreateReviewForm(instance=review_to_update)
+    if request.method == "POST":
+        review_form = CreateReviewForm(request.POST, instance=review_to_update)
+        if review_form.is_valid():
+            review_form.save()
+            return redirect("posts")
+    return render(
+        request,
+        "review/create-review.html",
+        {"create_review_form": review_form, "ticket": review_to_update.ticket},
+    )
+
+
+@login_required
 def create_ticket(request):
-    """Allows a user to create or update a ticket"""
-    create_ticket_form = CreateTicketForm()
-    if request.GET.get("ticket_id"):
-        existing_ticket = Ticket.objects.get(id=request.GET.get("ticket_id"))
-        create_ticket_form = CreateTicketForm(instance=existing_ticket)
+    """Allows a user to create a ticket"""
     message = ""
-    if request.method == "POST" or request.method == "GET":
-        create_ticket_form = (
-            CreateTicketForm(request.POST, request.GET, request.FILES)
-            if not create_ticket_form
-            else create_ticket_form
-        )
-        if create_ticket_form.is_valid() or existing_ticket:
+    create_ticket_form = CreateTicketForm()
+
+    if request.method == "POST":
+        create_ticket_form = CreateTicketForm(request.POST, request.FILES)
+        if create_ticket_form.is_valid():
             # We create the ticket
             cleaned_data = create_ticket_form.cleaned_data
             ticket: Ticket = Ticket.objects.create(
@@ -105,7 +133,6 @@ def create_ticket(request):
         context={
             "form": create_ticket_form,
             "message": message,
-            "ticket": existing_ticket if request.GET.get("ticket_id") else None,
         },
     )
 
@@ -123,20 +150,22 @@ def unfollow_user(request):
 @login_required
 def remove_ticket(request):
     user = get_current_user(request.user)
-    ticket_to_remove = Ticket.objects.filter(id=request.GET.get("ticket_id"))
+    ticket_to_remove = Ticket.objects.filter(id=request.GET.get("ticket_id"), user=user)
+    if user.is_superuser:
+        ticket_to_remove = Ticket.objects.filter(id=request.GET.get("ticket_id"))
     if request.method == "GET":
-        if ticket_to_remove[0].user == user:
-            ticket_to_remove.delete()
+        ticket_to_remove.delete()
     return redirect("posts")
 
 
 @login_required
 def remove_review(request):
     user = get_current_user(request.user)
-    review_to_remove = Review.objects.filter(id=request.GET.get("review_id"))
+    review_to_remove = Review.objects.filter(id=request.GET.get("review_id"), user=user)
+    if user.is_superuser:
+        review_to_remove = Review.objects.filter(id=request.GET.get("review_id"))
     if request.method == "GET":
-        if review_to_remove[0].user == user:
-            review_to_remove.delete()
+        review_to_remove.delete()
     return redirect("posts")
 
 
@@ -149,25 +178,12 @@ def create_review(request):
     create_ticket_form = (
         CreateTicketForm(instance=ticket) if ticket else CreateTicketForm()
     )
-    review_id = request.GET.get("review_id", None)
-    review: Review = Review.objects.get(id=review_id) if review_id else None
-    create_review_form = (
-        CreateReviewForm(instance=review) if review else CreateReviewForm()
-    )
-    if review:
-        ticket = review.ticket
     message = ""
-    if request.method == "POST" or request.method == "GET":
-        print(request.method)
+    if request.method == "POST":
         if not ticket:
             create_ticket_form = CreateTicketForm(request.POST, request.FILES)
-        if not review:
-            create_review_form = CreateReviewForm(request.POST, request.GET)
         user = get_current_user(request.user)
-        if (create_review_form.is_valid() or review) and (
-            create_ticket_form.is_valid() or ticket
-        ):
-            print("valid")
+        if create_review_form.is_valid() and (create_ticket_form.is_valid() or ticket):
             # We create the ticket in case it does not exist
             if not ticket:
                 ticket: Ticket = Ticket.objects.create(

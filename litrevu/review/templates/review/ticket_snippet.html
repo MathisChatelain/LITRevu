@@ -20,7 +20,7 @@
 
     {% if allow_edition %}
         <div class="posts-edition-menu">
-            <a href="{% url 'create-ticket' %}?ticket_id={{post.id}}"><button>Modifier</button></a>
+            <a href="{% url 'update-ticket' %}?ticket_id={{post.id}}"><button>Modifier</button></a>
             <a href="{% url 'remove-ticket' %}?ticket_id={{post.id}}"><button>Supprimer</button></a>
         </div>
     {% endif %}
