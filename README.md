@@ -64,6 +64,8 @@ deactivate
 
 Cela vous ramènera à l'environnement Python global de votre système.
 
-## Conclusion
+## Lancement de l'application
 
-Félicitations ! Vous savez maintenant comment créer et activer un environnement de développement Python en utilisant `venv`. L'utilisation d'environnements virtuels est une pratique recommandée pour développer des applications Python afin de maintenir la cohérence des dépendances et d'isoler votre projet des autres installations Python sur votre système.
+```bash
+python manage.py runserver
+```
