@@ -67,7 +67,7 @@ Cela vous ramènera à l'environnement Python global de votre système.
 ## Lancement de l'application
 
 ```bash
-pip install requirements.txt
+pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 ```
